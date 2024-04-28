@@ -16,10 +16,10 @@ public class Main {
 
     public static void main(String[] args) {
         // eleccion del algoritmo
-        crearMatrices(); // GENERA LAS MATRICES (TARDA VARIOS MINUTOS POR SU MAGNITUD)
+        //crearMatrices(); // GENERA LAS MATRICES (TARDA VARIOS MINUTOS POR SU MAGNITUD)
 
         //DESDOCUMENTAR PARA PROBAR ALGORITMOS YA CREADOS Y DOCUMENTAR EL METODO //crearMatrices();
-        /*
+
         for(int algoritmo = 1; algoritmo <= 7; algoritmo++) {
             //iteraciones por las diferentes matrices nxn
             for (int caso = 1; caso <= 8; caso++) {
@@ -35,18 +35,17 @@ public class Main {
             TiempoEjecucion.ResulTimeMatrix(TiempoEjecucion.matricesTiempoAlgoritmos.size());
             TiempoEjecucion.matricesTiempoAlgoritmos.clear();
         }
+
+
         try {
             TestMatricex.ExportAllMatrix();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-         */
-
     }
     public static void crearMatrices(){
-        int n = 512; // Número de columnas
-        int m = 512; // Número de filas
+        int n = 256; // Número de columnas
+        int m = 256; // Número de filas
 
         // Generar la matriz con números aleatorios de 6 dígitos
 
@@ -157,43 +156,43 @@ public class Main {
     public static void matrices(int caso){
         switch (caso){
             case 1:{
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_512x512.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_512x512.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_256x256.txt",256);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_256x256.txt",256);
                 break;
             }
             case 2:{
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_1024x1024.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_1024x1024.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_512x512.txt",512);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_512x512.txt",512);
                 break;
             }
             case 3: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_2048x2048.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_2048x2048.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_1024x1024.txt",1024);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_1024x1024.txt",1024);
                 break;
             }
             case 4: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_4096x4096.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_4096x4096.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_2048x2048.txt",2048);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_2048x2048.txt",2048);
                 break;
             }
             case 5: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_8192x8192.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_8192x8192.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_4096x4096.txt",4096);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_4096x4096.txt",4096);
                 break;
             }
             case 6: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_10240x10240.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_2048x2048.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_6144x6144.txt",6144);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_6144x6144.txt",6144);
                 break;
             }
             case 7: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_12288x12288.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_12288x12288.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_8192x8192.txt",8192);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_8192x8192.txt",8192);
                 break;
             }
             case 8: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_16384x16384.txt",(int)Math.pow(2, caso));
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_16384x16384.txt",(int)Math.pow(2, caso));
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_12288x12288.txt",12288);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_12288x12288.txt",12288);
                 break;
             }
             default:
