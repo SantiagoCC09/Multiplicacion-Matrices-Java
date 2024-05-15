@@ -2,8 +2,6 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-src/1matriz/
-src/2matriz/
 
 ### Eclipse ###
 .apt_generated

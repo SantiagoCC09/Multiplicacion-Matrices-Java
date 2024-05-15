@@ -42,6 +42,8 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
     }
     public static void crearMatrices(){
         int n = 256; // Número de columnas
@@ -100,7 +102,7 @@ public class Main {
         switch (option){
             case 1:{
                 inicio = System.nanoTime();
-                NaivStandard.naivStandard(Matriz1, Matriz2);
+                NaivKahan.naiveKahan(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
@@ -114,33 +116,19 @@ public class Main {
             }
             case 3:{
                 inicio = System.nanoTime();
-                NaivKahan.naiveKahan(Matriz1, Matriz2);
+                NaivLoopUnrollingTwo.naiveLoopUnrollingTwo(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
             }
             case 4:{
                 inicio = System.nanoTime();
-                NaivLoopUnrollingTwo.naiveLoopUnrollingTwo(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 5:{
-                inicio = System.nanoTime();
-                NaivLoopUnrollingThree.naivLoopUnrollingThree(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 6:{
-                inicio = System.nanoTime();
                 NaivLoopUnrollingFour.naivLoopUnrollingFour(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
             }
-            case 7:{
+            case 5:{
                 inicio = System.nanoTime();
                 StrassenNaiv.multiply(Matriz1, Matriz2);
                 fin = System.nanoTime();
