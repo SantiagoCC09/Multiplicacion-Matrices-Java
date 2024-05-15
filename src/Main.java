@@ -18,9 +18,9 @@ public class Main {
         // eleccion del algoritmo
         //crearMatrices(); // GENERA LAS MATRICES (TARDA VARIOS MINUTOS POR SU MAGNITUD)
 
-        //DESDOCUMENTAR PARA PROBAR ALGORITMOS YA CREADOS Y DOCUMENTAR EL METODO //crearMatrices();
+        //DOCUMENTAR LO DE ABAJO PARA PROBAR ALGORITMOS YA CREADOS Y DOCUMENTAR EL METODO //crearMatrices();
 
-        for(int algoritmo = 1; algoritmo <= 7; algoritmo++) {
+        for(int algoritmo = 1; algoritmo <= 8; algoritmo++) {
             //iteraciones por las diferentes matrices nxn
             for (int caso = 1; caso <= 8; caso++) {
                 matrices(caso);
@@ -134,6 +134,15 @@ public class Main {
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
+            }
+            case 6:{
+                System.out.println("Agregue Algoritmo StrassenWinograd");
+            }
+            case 7:{
+                System.out.println("Agregue Algoritmo WinogradOriginal");
+            }
+            case 8:{
+                System.out.println("Agregue Algoritmo WinogradScaled");
             }
             default: {
                 System.out.println("Opcion incorrecta");
