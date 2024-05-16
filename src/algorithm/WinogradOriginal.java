@@ -2,77 +2,61 @@ package algorithm;
 import java.util.Random;
 
 public class WinogradOriginal {
-    public static boolean coppersmithWinograd(double[][] M1,
-                                              double[][] M2,
-                                              double[][] M3, int n)
-    {
-        double[][] a = new double[n][1];
-        Random rand = new Random();
-        for (int i = 0; i < n; i++) {
-            a[i][0] = rand.nextInt() % 2;
+    public static void algWinogradOriginal(double[][] matrizA, double[][] matrizB, double[][] matrizRes, int N, int P, int M) {
+        int i, j, k;
+        double aux;
+        int upsilon = P % 2;
+        int gamma = P - upsilon;
+        double[] y = new double[M];
+        double[] z = new double[N];
+        for (i = 0; i < N; i++) {
+            aux = 0.0;
+            for (j = 0; j < gamma; j += 2) {
+                aux += matrizA[i][j] * matrizA[i][j + 1];
+            }
+            y[i] = aux;
         }
-
-        double[][] M2a = new double[n][1];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 1; j++) {
-                for (int k = 0; k < n; k++) {
-                    M2a[i][j]
-                            = M2a[i][j] + M2[i][k] * a[k][j];
+        for (i = 0; i < N; i++) {
+            aux = 0.0;
+            for (j = 0; j < gamma; j += 2) {
+                aux += matrizB[j][i] * matrizB[j + 1][i];
+            }
+            z[i] = aux;
+        }
+        if (upsilon == 1) {
+            int PP = P - 1;
+            for (i = 0; i < M; i++) {
+                for (k = 0; k < N; k++) {
+                    aux = 0.0;
+                    for (j = 0; j < gamma; j += 2) {
+                        aux += (matrizA[i][j] + matrizB[j + 1][k])
+                                * (matrizA[i][j + 1] + matrizB[j][k]);
+                    }
+                    matrizRes[i][k] = aux - y[i] - z[k] + matrizA[i][PP] * matrizB[PP][k];
+                }
+            }
+        } else {
+            for (i = 0; i < M; i++) {
+                for (k = 0; k < N; k++) {
+                    aux = 0.0;
+                    for (j = 0; j < gamma; j += 2) {
+                        aux += (matrizA[i][j] + matrizB[j + 1][k])
+                                * (matrizA[i][j + 1] + matrizB[j][k]);
+                    }
+                    matrizRes[i][k] = aux - y[i] - z[k];
                 }
             }
         }
-
-        double[][] M3a = new double[n][1];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 1; j++) {
-                for (int k = 0; k < n; k++) {
-                    M3a[i][j]
-                            = M3a[i][j] + M3[i][k] * a[k][j];
-                }
-            }
-        }
-
-        double[][] M12a = new double[n][1];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 1; j++) {
-                for (int k = 0; k < n; k++) {
-                    M12a[i][j]
-                            = M12a[i][j] + M1[i][k] * M2a[k][j];
-                }
-            }
-        }
-        for (int i = 0; i < n; i++) {
-            M12a[i][0] -= M3a[i][0];
-        }
-        boolean sameResultantMatrix = true;
-        for (int i = 0; i < n; i++) {
-            if (M12a[i][0] == 0)
-                continue;
-            else
-                sameResultantMatrix = false;
-        }
-        return sameResultantMatrix;
+        // Liberar el espacio de la memoria
+        y = null;
+        z = null;
     }
 
-    // Driver's Function
-    public static void main(String[] args)
-    {
-
-        /// "Input the dimension of the matrices: "
-        int n;
-        n = 2;
-        // "Input the 1st or M1 matrix: "
-        double[][] M1 = { { 1, 2 }, { 3, 4 } };
-        // "Input the 2nd or M2 matrix: "
-
-        double[][] M2 = { { 2, 0 }, { 1, 2 } };
-
-        // "Input the result or M3 matrix: "
-        double[][] M3 = { { 4, 4 }, { 10, 8 } };
-
-        if (coppersmithWinograd(M1, M2, M3, n))
-            System.out.println("Resultant matrix is Matching");
-        else
-            System.out.println("Resultant matrix is not Matching");
+    public static void multiply(double[][] matrizA, double[][] matrizB) {
+        int N = matrizA.length;
+        int P = matrizB.length;
+        int M = matrizB[0].length;
+        double[][] matrizRes = new double[N][M];
+        algWinogradOriginal(matrizA, matrizB, matrizRes, N, P, M);
     }
 }

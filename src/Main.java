@@ -20,7 +20,7 @@ public class Main {
 
         //DOCUMENTAR LO DE ABAJO PARA PROBAR ALGORITMOS YA CREADOS Y DOCUMENTAR EL METODO //crearMatrices();
 
-        for(int algoritmo = 1; algoritmo <= 8; algoritmo++) {
+        for(int algoritmo = 1; algoritmo <= 15; algoritmo++) {
             //iteraciones por las diferentes matrices nxn
             for (int caso = 1; caso <= 8; caso++) {
                 matrices(caso);
@@ -42,7 +42,6 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
 
     }
     public static void crearMatrices(){
@@ -99,56 +98,138 @@ public class Main {
 
 
     public static void algorithm(int option){
+        double[][] matrizDouble1=convertToIntToDouble(Matriz1);
+        double[][] matrizDouble2=convertToIntToDouble(Matriz2);
         switch (option){
             case 1:{
-                inicio = System.nanoTime();
-                NaivKahan.naiveKahan(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 2:{
+                //NaivOnArray
                 inicio = System.nanoTime();
                 NaivOnArray.naivOnArray(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
             }
-            case 3:{
+            case 2:{
+                //NaivLoopUnrrollingTwo
                 inicio = System.nanoTime();
                 NaivLoopUnrollingTwo.naiveLoopUnrollingTwo(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
             }
-            case 4:{
+            case 3:{
+                //NaivLoopUnrollingFour
                 inicio = System.nanoTime();
                 NaivLoopUnrollingFour.naivLoopUnrollingFour(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
             }
-            case 5:{
+            case 4:{
+                //StrassenNaiv
                 inicio = System.nanoTime();
                 StrassenNaiv.multiply(Matriz1, Matriz2);
                 fin = System.nanoTime();
                 TiempoEjecucion.timeAlgortithm(inicio,fin);
                 break;
             }
+            case 5:{
+                //WinogradOriginal
+                inicio = System.nanoTime();
+                WinogradOriginal.multiply(matrizDouble1,matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            }
             case 6:{
-                System.out.println("Agregue Algoritmo StrassenWinograd");
+                //WinogradScaled
+                inicio = System.nanoTime();
+                WinogradScaled.multiply(matrizDouble1,matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
             }
             case 7:{
-                System.out.println("Agregue Algoritmo WinogradOriginal");
+                //StrassenWinograd
+                inicio = System.nanoTime();
+                StrassenWinograd.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
             }
-            case 8:{
-                System.out.println("Agregue Algoritmo WinogradScaled");
-            }
+            case 8:
+                //III_3_Sequential_Block
+                inicio = System.nanoTime();
+                III_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 9:
+                //IV_3_Sequential_Block
+                inicio = System.nanoTime();
+                IV_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 10:
+                //V_3_SequentialBlock
+                inicio = System.nanoTime();
+                V_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 11:
+                //III_4_Parallel_Block
+                inicio = System.nanoTime();
+                III_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 12:
+                //IV_4_Parallel_Block
+                inicio = System.nanoTime();
+                IV_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 13:
+                //V_4_Parallel_Block
+                inicio = System.nanoTime();
+                V_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 14:
+                //III_5_Enhanced_Parallel_Block
+                inicio = System.nanoTime();
+                III_5_Enhanced_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
+            case 15:
+                //IV_5_Enhanced_Parallel_Block
+                inicio = System.nanoTime();
+                IV_5_Enhanced_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
+                fin = System.nanoTime();
+                TiempoEjecucion.timeAlgortithm(inicio,fin);
+                break;
             default: {
                 System.out.println("Opcion incorrecta");
             }
         }//cierra SWITCH
     }
+    public static double[][] convertToIntToDouble(int[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = (double) matrix[i][j];
+            }
+        }
+        return result;
+    }
+
 
     public static void matrices(int caso){
         switch (caso){
