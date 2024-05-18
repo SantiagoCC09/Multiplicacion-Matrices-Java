@@ -1,7 +1,6 @@
 import algorithm.*;
 import tools.ExportarTiempos;
 import tools.LeerArchivoTxt;
-import tools.TestMatricex;
 import tools.TiempoEjecucion;
 
 import java.io.*;
@@ -13,63 +12,112 @@ public class Main {
     static int[][] Matriz1;
     static int[][] Matriz2;
 
-
     public static void main(String[] args) {
-        // eleccion del algoritmo
+        // Elección del algoritmo
         //crearMatrices(); // GENERA LAS MATRICES (TARDA VARIOS MINUTOS POR SU MAGNITUD)
 
-        //DOCUMENTAR LO DE ABAJO PARA PROBAR ALGORITMOS YA CREADOS Y DOCUMENTAR EL METODO //crearMatrices();
+        // DOCUMENTAR LO DE ABAJO PARA PROBAR ALGORITMOS YA CREADOS Y DOCUMENTAR EL METODO // crearMatrices();
 
-        for(int algoritmo = 1; algoritmo <= 15; algoritmo++) {
-            //iteraciones por las diferentes matrices nxn
-            for (int caso = 1; caso <= 8; caso++) {
+        // Llamar al método vaciarTiempos() para limpiar los archivos de tiempos antes de empezar
+        /*          1.NaivOnArray
+                    2.NaivLoopUnrollingTwo
+                    3.NaivLoopUnrollingFour
+                    4.StrassenNaiv
+                    5.WinogradOriginal
+                    6.WinogradScaled
+                    7.StrassenWinograd
+                    8.III_3_Sequential_Block
+                    9.IV_3_Sequential_Block
+                    10.V_3_SequentialBlock
+                    11.III_4_Parallel_Block
+                    12.IV_4_Parallel_Block
+                    13.V_4_Parallel_Block
+                    14.III_5_Enhanced_Parallel_Block
+                    15.IV_5_Enhanced_Parallel_Block
+
+                    Caso 1: 256
+                    Caso 2: 512
+                    Caso 3: 1024
+                    Caso 4: 2048
+                    Caso 5: 4096
+                    Caso 6: 6144
+                    Caso 7: 8192
+                    Caso 8: 10240
+
+                     */
+        vaciarTiempos();
+        for(int algoritmo=1; algoritmo<=15; algoritmo++){
+            for(int caso=1; caso<=8; caso++){
+
+        //int algoritmo =1;
+        //int caso = 8;
                 matrices(caso);
                 algorithm(algoritmo);
+
+                System.out.println("Termino algoritmo: " + algoritmo + " caso "+caso+"\n");
+
+                //TiempoEjecucion.ResulTimeMatrix(caso);
+
+                try {
+                    ExportarTiempos.exportarTiemposMatriz(TiempoEjecucion.matricesTiempoAlgoritmos, caso);
+                    ExportarTiempos.exportarTiempos(TiempoEjecucion.matricesTiempoAlgoritmos, algoritmo);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                TiempoEjecucion.matricesTiempoAlgoritmos.clear();
+
+
+
+
             }
-            System.out.println("Termino algoritmo: " + algoritmo+ "\n");
-            try {
-                ExportarTiempos.exportarTiempos(TiempoEjecucion.matricesTiempoAlgoritmos, algoritmo);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            TiempoEjecucion.ResulTimeMatrix(TiempoEjecucion.matricesTiempoAlgoritmos.size());
-            TiempoEjecucion.matricesTiempoAlgoritmos.clear();
         }
 
 
-        try {
-            TestMatricex.ExportAllMatrix();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
-    public static void crearMatrices(){
+
+    // Método para limpiar los archivos de tiempos
+    public static void vaciarTiempos() {
+        try {
+            for (String algoritmo : ExportarTiempos.getAlgoritmo()) {
+                String rutaArchivo = "src/TimeResult/" + algoritmo + ".txt";
+                new PrintWriter(rutaArchivo).close();
+            }
+            for (String matriz : ExportarTiempos.getMatrices()) {
+                String rutaArchivo = "src/TimeResultMatriz/" + matriz + ".txt";
+                new PrintWriter(rutaArchivo).close();
+            }
+            System.out.println("Archivos de tiempos vaciados correctamente.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void crearMatrices() {
         int n = 256; // Número de columnas
         int m = 256; // Número de filas
 
         // Generar la matriz con números aleatorios de 6 dígitos
+        for (int i = 0; i < 8; i++) {
+            int[][] matriz = generarMatriz(n, m);
+            // Guardar la matriz en un archivo
+            guardarMatrizEnArchivo(matriz, "src/1matriz/1matriz_" + n + "x" + m + ".txt");
+            guardarMatrizEnArchivo(matriz, "src/2matriz/2matriz_" + n + "x" + m + ".txt");
 
-        for(int i=0; i<8; i++){
-                int[][] matriz = generarMatriz(n, m);
-                // Guardar la matriz en un archivo
-                guardarMatrizEnArchivo(matriz, "src/1matriz/1matriz_"+n+"x"+m+".txt");
-                guardarMatrizEnArchivo(matriz, "src/2matriz/2matriz_"+n+"x"+m+".txt");
-                if(i<=3){
-                    n=n*2;
-                    m=m*2;
-                }else{
-                    if(i==6){
-                        n=n+4096;
-                        m=m+4096;
-                    }else{
-                        n=n+2048;
-                        m=m+2048;
-                    }
-                }
+            if (i < 4) {
+                n = n * 2;
+                m = m * 2;
+            }else{
+                n = n + 2048;
+                m = m + 2048;
+            }
         }
+
         System.out.println("Matrices generadas");
     }
+
+
 
     public static int[][] generarMatriz(int n, int m) {
         int[][] matriz = new int[m][n];
@@ -96,128 +144,90 @@ public class Main {
         }
     }
 
-
-    public static void algorithm(int option){
-        double[][] matrizDouble1=convertToIntToDouble(Matriz1);
-        double[][] matrizDouble2=convertToIntToDouble(Matriz2);
-        switch (option){
-            case 1:{
-                //NaivOnArray
-                inicio = System.nanoTime();
-                NaivOnArray.naivOnArray(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
+    public static void algorithm(int option) {
+        final double[][] matrizDouble1 = convertToIntToDouble(Matriz1);
+        final double[][] matrizDouble2 = convertToIntToDouble(Matriz2);
+        try {
+            switch (option) {
+                case 1:
+                    // NaivOnArray
+                    executeAlgorithm(() -> NaivOnArray.naivOnArray(Matriz1, Matriz2), option);
+                    break;
+                case 2:
+                    // NaivLoopUnrollingTwo
+                    executeAlgorithm(() -> NaivLoopUnrollingTwo.naiveLoopUnrollingTwo(Matriz1, Matriz2), option);
+                    break;
+                case 3:
+                    // NaivLoopUnrollingFour
+                    executeAlgorithm(() -> NaivLoopUnrollingFour.naivLoopUnrollingFour(Matriz1, Matriz2), option);
+                    break;
+                case 4:
+                    // StrassenNaiv
+                    executeAlgorithm(() -> StrassenNaiv.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 5:
+                    // WinogradOriginal
+                    executeAlgorithm(() -> WinogradOriginal.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 6:
+                    // WinogradScaled
+                    executeAlgorithm(() -> WinogradScaled.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 7:
+                    // StrassenWinograd
+                    executeAlgorithm(() -> StrassenWinograd.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 8:
+                    // III_3_Sequential_Block
+                    executeAlgorithm(() -> III_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 9:
+                    // IV_3_Sequential_Block
+                    executeAlgorithm(() -> IV_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 10:
+                    // V_3_SequentialBlock
+                    executeAlgorithm(() -> V_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 11:
+                    // III_4_Parallel_Block
+                    executeAlgorithm(() -> III_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 12:
+                    // IV_4_Parallel_Block
+                    executeAlgorithm(() -> IV_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 13:
+                    // V_4_Parallel_Block
+                    executeAlgorithm(() -> V_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 14:
+                    // III_5_Enhanced_Parallel_Block
+                    executeAlgorithm(() -> III_5_Enhanced_Parallel_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                case 15:
+                    // IV_5_Enhanced_Parallel_Block
+                    executeAlgorithm(() -> IV_5_Enhanced_Parallel_Block.multiply(matrizDouble1, matrizDouble2), option);
+                    break;
+                default:
+                    System.out.println("Opción incorrecta");
             }
-            case 2:{
-                //NaivLoopUnrrollingTwo
-                inicio = System.nanoTime();
-                NaivLoopUnrollingTwo.naiveLoopUnrollingTwo(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 3:{
-                //NaivLoopUnrollingFour
-                inicio = System.nanoTime();
-                NaivLoopUnrollingFour.naivLoopUnrollingFour(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 4:{
-                //StrassenNaiv
-                inicio = System.nanoTime();
-                StrassenNaiv.multiply(Matriz1, Matriz2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 5:{
-                //WinogradOriginal
-                inicio = System.nanoTime();
-                WinogradOriginal.multiply(matrizDouble1,matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 6:{
-                //WinogradScaled
-                inicio = System.nanoTime();
-                WinogradScaled.multiply(matrizDouble1,matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 7:{
-                //StrassenWinograd
-                inicio = System.nanoTime();
-                StrassenWinograd.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            }
-            case 8:
-                //III_3_Sequential_Block
-                inicio = System.nanoTime();
-                III_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 9:
-                //IV_3_Sequential_Block
-                inicio = System.nanoTime();
-                IV_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 10:
-                //V_3_SequentialBlock
-                inicio = System.nanoTime();
-                V_3_Sequential_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 11:
-                //III_4_Parallel_Block
-                inicio = System.nanoTime();
-                III_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 12:
-                //IV_4_Parallel_Block
-                inicio = System.nanoTime();
-                IV_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 13:
-                //V_4_Parallel_Block
-                inicio = System.nanoTime();
-                V_4_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 14:
-                //III_5_Enhanced_Parallel_Block
-                inicio = System.nanoTime();
-                III_5_Enhanced_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            case 15:
-                //IV_5_Enhanced_Parallel_Block
-                inicio = System.nanoTime();
-                IV_5_Enhanced_Parallel_Block.multiply(matrizDouble1, matrizDouble2);
-                fin = System.nanoTime();
-                TiempoEjecucion.timeAlgortithm(inicio,fin);
-                break;
-            default: {
-                System.out.println("Opcion incorrecta");
-            }
-        }//cierra SWITCH
+        } finally {
+            // Liberar recursos
+            Matriz1 = null;
+            Matriz2 = null;
+            System.gc(); // Sugerir recolección de basura
+        }
     }
+
+    private static void executeAlgorithm(Runnable algorithm, int option) {
+        inicio = System.nanoTime();
+        algorithm.run();
+        fin = System.nanoTime();
+        TiempoEjecucion.timeAlgortithm(inicio, fin);
+        // Guardar tiempo inmediatamente después de la ejecución del algoritmo
+    }
+
     public static double[][] convertToIntToDouble(int[][] matrix) {
         int rows = matrix.length;
         int cols = matrix[0].length;
@@ -230,54 +240,42 @@ public class Main {
         return result;
     }
 
-
-    public static void matrices(int caso){
-        switch (caso){
-            case 1:{
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_256x256.txt",256);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_256x256.txt",256);
+    public static void matrices(int caso) {
+        switch (caso) {
+            case 1:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_256x256.txt", 256);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_256x256.txt", 256);
                 break;
-            }
-            case 2:{
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_512x512.txt",512);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_512x512.txt",512);
+            case 2:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_512x512.txt", 512);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_512x512.txt", 512);
                 break;
-            }
-            case 3: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_1024x1024.txt",1024);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_1024x1024.txt",1024);
+            case 3:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_1024x1024.txt", 1024);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_1024x1024.txt", 1024);
                 break;
-            }
-            case 4: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_2048x2048.txt",2048);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_2048x2048.txt",2048);
+            case 4:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_2048x2048.txt", 2048);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_2048x2048.txt", 2048);
                 break;
-            }
-            case 5: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_4096x4096.txt",4096);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_4096x4096.txt",4096);
+            case 5:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_4096x4096.txt", 4096);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_4096x4096.txt", 4096);
                 break;
-            }
-            case 6: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_6144x6144.txt",6144);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_6144x6144.txt",6144);
+            case 6:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_6144x6144.txt", 6144);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_6144x6144.txt", 6144);
                 break;
-            }
-            case 7: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_8192x8192.txt",8192);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_8192x8192.txt",8192);
+            case 7:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_8192x8192.txt", 8192);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_8192x8192.txt", 8192);
                 break;
-            }
-            case 8: {
-                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_12288x12288.txt",12288);
-                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_12288x12288.txt",12288);
+            case 8:
+                Matriz1 = LeerArchivoTxt.leerArchivo("src/1matriz/1matriz_10240x10240.txt", 10240);
+                Matriz2 = LeerArchivoTxt.leerArchivo("src/2matriz/2matriz_10240x10240.txt", 10240);
                 break;
-            }
             default:
                 break;
-
-        }//cierra SWITCH
+        }
     }
-
-
 }
